@@ -218,16 +218,14 @@ public class OrderService extends MediaBrowserService {
         boolean atEnd = currentProductIndex >= menuProvider.getProducts().size() - 1;
 
         Bundle extras = new Bundle();
-        if (state == State.STATE_PRODUCT_DISPLAY) {
-            if (atBeginning) {
-                extras.putBoolean(
-                        "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_PREVIOUS",
-                        true);
-            } else if (atEnd) {
-                extras.putBoolean(
-                        "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_NEXT",
-                        true);
-            }
+        if (atBeginning) {
+            extras.putBoolean(
+                    "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_PREVIOUS",
+                    true);
+        } else if (atEnd) {
+            extras.putBoolean(
+                    "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_NEXT",
+                    true);
         }
         extras.putBoolean("com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_QUEUE", true);
         mSession.setExtras(extras);
@@ -381,7 +379,7 @@ public class OrderService extends MediaBrowserService {
     private void doCheckout() {
         state = State.STATE_CHECKOUT;
         double total = calculateTotalAmount();
-        displayPage("$" + total + " TOTAL", shoppingCart.size() + " item(s)", "");
+        displayPage("$" + total + " TOTAL", shoppingCart.size() + " item(s)", "android.resource://com.share.gta/drawable/buy_with_masterpass2");
     }
 
     private double calculateTotalAmount() {
