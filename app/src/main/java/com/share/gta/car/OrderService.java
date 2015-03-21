@@ -394,17 +394,19 @@ public class OrderService extends MediaBrowserService {
 
     private void updateShoppingCartQueue() {
         List<MediaSession.QueueItem> queueItems = new ArrayList<>();
-        int count = 0;
-        MediaMetadata track0 = createMediaMetadata("TOTAL: $" + calculateTotalAmount(), shoppingCart.size() + " item(s)", "");
-        MediaSession.QueueItem item0 = new MediaSession.QueueItem(
-                track0.getDescription(), count++);
-        queueItems.add(item0);
+        if (shoppingCart.size() > 0) {
+            int count = 0;
+            MediaMetadata track0 = createMediaMetadata("TOTAL: $" + calculateTotalAmount(), shoppingCart.size() + " item(s)", "");
+            MediaSession.QueueItem item0 = new MediaSession.QueueItem(
+                    track0.getDescription(), count++);
+            queueItems.add(item0);
 
-        for (Product product : shoppingCart) {
-            MediaMetadata track = createMediaMetadata(product.getName(), "$" + product.getPrice(), product.getImageUrl());
-            MediaSession.QueueItem item = new MediaSession.QueueItem(
-                    track.getDescription(), count++);
-            queueItems.add(item);
+            for (Product product : shoppingCart) {
+                MediaMetadata track = createMediaMetadata(product.getName(), "$" + product.getPrice(), product.getImageUrl());
+                MediaSession.QueueItem item = new MediaSession.QueueItem(
+                        track.getDescription(), count++);
+                queueItems.add(item);
+            }
         }
         mSession.setQueue(queueItems);
         mSession.setQueueTitle("Shopping Cart");
