@@ -28,6 +28,7 @@ public class MenuAdapter extends ArrayAdapter<MenuItem> {
         items.add(new MenuItem("{fa-home}  ", context.getString(R.string.home)));
         items.add(new MenuItem("{fa-shopping-cart}  ", context.getString(R.string.cart)));
         items.add(new MenuItem("{fa-user}  ", context.getString(R.string.profile)));
+        items.add(new MenuItem(null, "Restaurants"));
         super.addAll(items);
         this.context = context;
     }

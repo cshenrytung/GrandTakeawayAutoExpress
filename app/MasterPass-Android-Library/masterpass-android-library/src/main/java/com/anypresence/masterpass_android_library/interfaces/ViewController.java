@@ -18,5 +18,7 @@ public interface ViewController {
 
     void runOnUiThread(Runnable runnable);
 
+    void callDone(Activity activity, Boolean animated);
+
     String getXSessionId();
 }

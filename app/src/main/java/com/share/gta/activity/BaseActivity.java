@@ -72,6 +72,13 @@ public class BaseActivity extends FragmentActivity implements ViewController, IM
         startActivityForResult(intent, options.type.value);
     }
 
+    public void callDone(Activity activity, Boolean animated) {
+        mConnectionProgressDialog.dismiss();
+        Intent intent = new Intent(this, activity.getClass());
+        Bundle bundle = new Bundle();
+        startActivityForResult(intent, 0);
+    }
+
     @Override
     public void dismissViewControllerAnimated(boolean animated, OnCompleteCallback callback) {
 

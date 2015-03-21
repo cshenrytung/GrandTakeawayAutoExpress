@@ -97,6 +97,10 @@ public class GTAExpressActivity extends BaseActivity
             case 2:
                 fragment = ProfileFragment.newInstance(sectionNumber);
                 break;
+            case 3:
+                fragment = HomeFragment.newInstance(sectionNumber);
+                requestRestaurantList();
+                break;
             default:
                 fragment = HomeFragment.newInstance(sectionNumber);
                 break;
@@ -104,6 +108,12 @@ public class GTAExpressActivity extends BaseActivity
         fm.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+    }
+
+    public void requestRestaurantList() {
+        BaseActivity activity = (BaseActivity) this;
+        activity.showProgress();
+        activity.getMCLibrary().restaurantList(activity);
     }
 
     public void onSectionAttached(int number) {
@@ -117,6 +127,8 @@ public class GTAExpressActivity extends BaseActivity
             case 3:
                 mTitle = getString(R.string.profile);
                 break;
+            case 4:
+                mTitle = "Restaurants";
         }
     }
 
