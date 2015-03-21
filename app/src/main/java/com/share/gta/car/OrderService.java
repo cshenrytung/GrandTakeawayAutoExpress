@@ -291,6 +291,10 @@ public class OrderService extends MediaBrowserService {
                 doCheckout();
             } else if (CUSTOM_ACTION_SHOPPING_CART.equals(action)) {
                 doShoppingCart();
+            } else if (CUSTOM_ACTION_PREVIOUS.equals(action)) {
+                doPrevious();
+            } else if (CUSTOM_ACTION_NEXT.equals(action)) {
+                doNext();
             } else {
                 LogHelper.e(TAG, "Unsupported action: ", action);
             }
@@ -301,6 +305,14 @@ public class OrderService extends MediaBrowserService {
         public void onPlayFromSearch(String query, Bundle extras) {
             mSession.setQueueTitle("onPlayFromSearch");
         }
+    }
+
+    private void doNext() {
+
+    }
+
+    private void doPrevious() {
+        
     }
 
     private void doMainButton() {
