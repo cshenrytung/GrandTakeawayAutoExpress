@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+def AAVersion = '3.2'
 
 android {
 
@@ -24,6 +26,13 @@ android {
     }
 }
 
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        resourcePackageName 'com.share.gta'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile(project(':masterpass-android-library')) {
@@ -36,4 +45,7 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.+'
     //compile 'org.apache.commons:commons-lang3:3.0'
     //compile 'com.google.code.gson:gson:2.3'
+
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
