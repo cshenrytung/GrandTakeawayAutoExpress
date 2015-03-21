@@ -29,7 +29,7 @@ import java.util.List;
  * Copyright (c) 2015 AnyPresence, Inc. All rights reserved.
  */
 
-public class GadgetShopActivity extends BaseActivity
+public class GTAExpressActivity extends BaseActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, ProductAdapter.IProduct, HomeFragment.Callback, CartFragment.Callback {
     public static final String ARG_SECTION_NUMBER = "section_number";
     /**
@@ -181,7 +181,7 @@ public class GadgetShopActivity extends BaseActivity
             public void run() {
                 Fragment fragmentActive = getFragmentManager().findFragmentById(R.id.container);
                 if (fragmentActive instanceof ProfileFragment) {
-                    GadgetShopDialog dialog = new GadgetShopDialog(GadgetShopActivity.this, getString(R.string.profile_dialog_title), getString(R.string.profile_dialog_message));
+                    GadgetShopDialog dialog = new GadgetShopDialog(GTAExpressActivity.this, getString(R.string.profile_dialog_title), getString(R.string.profile_dialog_message));
                     dialog.setCancelable(false);
                     dialog.show();
                 }
