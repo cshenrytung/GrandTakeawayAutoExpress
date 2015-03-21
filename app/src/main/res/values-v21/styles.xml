@@ -6,11 +6,11 @@
         <item name="android:colorPrimary">#ff005700</item>
 
         <!-- colorPrimaryDark is used for background -->
-        <item name="android:colorPrimaryDark">#ffbf360c</item>
+        <item name="android:colorPrimaryDark">#ff00360c</item>
 
         <!-- colorAccent is sparingly used for accents, like floating action button highlight,
         progress on playbar-->
-        <item name="android:colorAccent">#55005700</item>
+        <item name="android:colorAccent">#22005700</item>
 
     </style>
 

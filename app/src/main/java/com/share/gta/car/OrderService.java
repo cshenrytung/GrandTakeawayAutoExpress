@@ -216,8 +216,9 @@ public class OrderService extends MediaBrowserService {
     private void setCustomAction(PlaybackState.Builder stateBuilder) {
         boolean atBeginning = currentProductIndex == 0;
         boolean atEnd = currentProductIndex >= menuProvider.getProducts().size() - 1;
+
+        Bundle extras = new Bundle();
         if (state == State.STATE_PRODUCT_DISPLAY) {
-            Bundle extras = new Bundle();
             if (atBeginning) {
                 extras.putBoolean(
                         "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_PREVIOUS",
@@ -227,10 +228,11 @@ public class OrderService extends MediaBrowserService {
                         "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_NEXT",
                         true);
             }
-            mSession.setExtras(extras);
         }
+        extras.putBoolean("com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_QUEUE", true);
+        mSession.setExtras(extras);
 
-        stateBuilder.addCustomAction(CUSTOM_ACTION_SHOPPING_CART, "Shopping Cart", R.drawable.icon_cart);
+        //stateBuilder.addCustomAction(CUSTOM_ACTION_SHOPPING_CART, "Shopping Cart", R.drawable.icon_cart);
         if (!atBeginning) {
             stateBuilder.addCustomAction(CUSTOM_ACTION_PREVIOUS, "Previous", R.drawable.icon_back);
         }
@@ -366,6 +368,8 @@ public class OrderService extends MediaBrowserService {
     private void addToShoppingCart() {
         Product product = menuProvider.getProducts().get(currentProductIndex);
         shoppingCart.add(product);
+        updateShoppingCartQueue();
+        updatePlaybackState("");
         Toast.makeText(getBaseContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
     }
 
@@ -386,6 +390,24 @@ public class OrderService extends MediaBrowserService {
             total += product.getPrice();
         }
         return total;
+    }
+
+    private void updateShoppingCartQueue() {
+        List<MediaSession.QueueItem> queueItems = new ArrayList<>();
+        int count = 0;
+        MediaMetadata track0 = createMediaMetadata("TOTAL: $" + calculateTotalAmount(), shoppingCart.size() + " item(s)", "");
+        MediaSession.QueueItem item0 = new MediaSession.QueueItem(
+                track0.getDescription(), count++);
+        queueItems.add(item0);
+
+        for (Product product : shoppingCart) {
+            MediaMetadata track = createMediaMetadata(product.getName(), "$" + product.getPrice(), product.getImageUrl());
+            MediaSession.QueueItem item = new MediaSession.QueueItem(
+                    track.getDescription(), count++);
+            queueItems.add(item);
+        }
+        mSession.setQueue(queueItems);
+        mSession.setQueueTitle("Shopping Cart");
     }
 
 }
