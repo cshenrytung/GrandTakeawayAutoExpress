@@ -24,8 +24,8 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.service.media.MediaBrowserService;
+import android.widget.Toast;
 
 import com.share.gt.model.Category;
 import com.share.gt.model.Product;
@@ -52,9 +52,13 @@ public class OrderService extends MediaBrowserService {
     private static final String CUSTOM_ACTION_PREVIOUS = "custom_action_previous";
     private static final String CUSTOM_ACTION_NEXT = "custom_action_next";
 
+    private static final String RESOURCE_URI_PATH = "android.resource://com.share.gta/";
+
     private MediaSession mSession;
     private MenuProvider menuProvider;
     private MediaPlayer mMediaPlayer;
+
+    private List<Product> shoppingCart = new ArrayList<>();
 
     private enum State {
         STATE_PRODUCT_DISPLAY, STATE_SHOPPING_CART, STATE_CHECKOUT
@@ -154,14 +158,14 @@ public class OrderService extends MediaBrowserService {
                     new MediaDescription.Builder()
                         .setMediaId(ID_PAYMENT)
                         .setTitle(getString(R.string.menu_payment))
-                        .setIconUri(Uri.parse("android.resource://com.share.gta/" + R.drawable.payment_icon))
+                        .setIconUri(Uri.parse("android.resource://com.share.gta/drawable/payment_icon"))
                         .build(), MediaItem.FLAG_BROWSABLE
             ));
             mediaItems.add(new MediaItem(
                     new MediaDescription.Builder()
                             .setMediaId(ID_HISTORY)
                             .setTitle(getString(R.string.menu_history))
-                            .setIconUri(Uri.parse("android.resource://com.share.gta/" + R.drawable.history_icon))
+                            .setIconUri(Uri.parse("android.resource://com.share.gta/drawable/history_icon"))
                             .build(), MediaItem.FLAG_BROWSABLE
             ));
 
@@ -204,31 +208,48 @@ public class OrderService extends MediaBrowserService {
     }
 
     private long getAvailableActions() {
-        long actions = PlaybackState.ACTION_PLAY;
+        long actions = PlaybackState.ACTION_PLAY_PAUSE;
 
         return actions;
     }
 
     private void setCustomAction(PlaybackState.Builder stateBuilder) {
-        stateBuilder.addCustomAction(CUSTOM_ACTION_SHOPPING_CART, "Shopping Cart",
-                R.drawable.icon_cart);
-        stateBuilder.addCustomAction(CUSTOM_ACTION_PREVIOUS, "Previous",
-                R.drawable.icon_back);
-        stateBuilder.addCustomAction(CUSTOM_ACTION_NEXT, "Next",
-                R.drawable.icon_next);
-        stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout",
-                R.drawable.icon_paynext);
+        boolean atBeginning = currentProductIndex == 0;
+        boolean atEnd = currentProductIndex >= menuProvider.getProducts().size() - 1;
+        if (state == State.STATE_PRODUCT_DISPLAY) {
+            Bundle extras = new Bundle();
+            if (atBeginning) {
+                extras.putBoolean(
+                        "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_PREVIOUS",
+                        true);
+            } else if (atEnd) {
+                extras.putBoolean(
+                        "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_NEXT",
+                        true);
+            }
+            mSession.setExtras(extras);
+        }
+
+        stateBuilder.addCustomAction(CUSTOM_ACTION_SHOPPING_CART, "Shopping Cart", R.drawable.icon_cart);
+        if (!atBeginning) {
+            stateBuilder.addCustomAction(CUSTOM_ACTION_PREVIOUS, "Previous", R.drawable.icon_back);
+        }
+        if (!atEnd) {
+            stateBuilder.addCustomAction(CUSTOM_ACTION_NEXT, "Next", R.drawable.icon_next);
+        }
+        stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout", R.drawable.icon_paynext);
+
     }
 
     private void displayPage(String line1, String line2, String backgroundUrl) {
         if (backgroundUrl == null || "".equals(backgroundUrl))
-            backgroundUrl = Uri.parse("android.resource://com.share.gta/" + R.drawable.bg).toString();
+            backgroundUrl = "android.resource://com.share.gta/drawable/bg";
         updateMetadata(line1, line2, backgroundUrl);
     }
 
     private void displayProductPage(Product product) {
         state = State.STATE_PRODUCT_DISPLAY;
-        displayPage(product.getName(), product.getDescription(), product.getImageUrl());
+        displayPage(product.getName(), "$" + product.getPrice(), product.getImageUrl());
     }
 
     private void updateMetadata(String line1, String line2, String backgroundUrl) {
@@ -312,16 +333,18 @@ public class OrderService extends MediaBrowserService {
     private void doNext() {
         List<Product> productList = menuProvider.getProducts();
         currentProductIndex++;
-        if (currentProductIndex >= productList.size())
-            currentProductIndex = productList.size()-1;
+        if (currentProductIndex >= productList.size()) {
+            currentProductIndex = productList.size() - 1;
+        }
         displayProductPage(productList.get(currentProductIndex));
     }
 
     private void doPrevious() {
         List<Product> productList = menuProvider.getProducts();
         currentProductIndex--;
-        if (currentProductIndex < 0)
+        if (currentProductIndex < 0) {
             currentProductIndex = 0;
+        }
         displayProductPage(productList.get(currentProductIndex));
     }
 
@@ -331,12 +354,19 @@ public class OrderService extends MediaBrowserService {
 
         switch (state) {
             case STATE_PRODUCT_DISPLAY:
+                addToShoppingCart();
                 break;
             case STATE_SHOPPING_CART:
                 break;
             case STATE_CHECKOUT:
                 break;
         }
+    }
+
+    private void addToShoppingCart() {
+        Product product = menuProvider.getProducts().get(currentProductIndex);
+        shoppingCart.add(product);
+        Toast.makeText(getBaseContext(), product.getName() + " added to cart", Toast.LENGTH_SHORT).show();
     }
 
     private void doShoppingCart() {
@@ -346,7 +376,16 @@ public class OrderService extends MediaBrowserService {
 
     private void doCheckout() {
         state = State.STATE_CHECKOUT;
-        displayPage("TOTAL AMOUNT: ", "$100.00", "");
+        double total = calculateTotalAmount();
+        displayPage("$" + total + " TOTAL", shoppingCart.size() + " item(s)", "");
+    }
+
+    private double calculateTotalAmount() {
+        double total = 0;
+        for (Product product : shoppingCart) {
+            total += product.getPrice();
+        }
+        return total;
     }
 
 }

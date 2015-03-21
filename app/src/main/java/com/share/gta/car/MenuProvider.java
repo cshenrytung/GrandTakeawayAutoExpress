@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.share.gt.model.Category;
 import com.share.gt.model.Product;
+import com.share.gta.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,16 +67,20 @@ public class MenuProvider {
     public List<Product> getProducts() {
         String[] names = {"Americano", "Cappuccino", "Iced Mocha"};
         String[] urls = {
-                "http://people.sc.fsu.edu/~jburkardt/data/png/blackbuck.png",
-                "http://www.whudat.de/images/graffiti_streetart_album_covers_02.jpg",
-                "http://www.bridalbouquets.sg/uploads/1217720100721085748_cd-cover-23.jpg"
+                "android.resource://com.share.gta/drawable/bg_americano",
+                "android.resource://com.share.gta/drawable/bg_cappuccino",
+                "android.resource://com.share.gta/drawable/bg_mocha"
         };
+        int[] resourceIds = {R.drawable.bg_americano, R.drawable.bg_cappuccino, R.drawable.bg_mocha};
+        double[] prices = {35.0, 32.0, 40.};
+
         productList = new ArrayList<>();
         for (int i = 0; i < names.length; i++) {
             Product product = new Product();
             product.setId(i);
             product.setName(names[i]);
-            product.setPrice(new Double(40));
+            product.setPrice(prices[i]);
+            product.setImageResourceId(resourceIds[i]);
             product.setImageUrl(urls[i]);
             productList.add(product);
         }
