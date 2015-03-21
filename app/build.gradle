@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId "com.mastercard.gadgetshop"
-        minSdkVersion 14
-        targetSdkVersion 20
+        minSdkVersion 21
+        targetSdkVersion 21
         versionCode 1
         versionName "0.5"
     }

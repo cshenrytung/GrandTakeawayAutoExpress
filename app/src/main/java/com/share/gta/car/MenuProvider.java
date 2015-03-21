@@ -62,6 +62,26 @@ public class MenuProvider {
         return categoryList;
     }
 
+    //stub the product list
+    public List<Product> getProducts() {
+        String[] names = {"Americano", "Cappuccino", "Iced Mocha"};
+        String[] urls = {
+                "https://dl.dropboxusercontent.com/content_link/2fhCoYnbINXYJI0vBFtF4sB42xsuxLMLpZc0siv7F8WXK6fskHpRHNh4hcW0Nlr2",
+                "https://dl.dropboxusercontent.com/content_link/ptotY9S1vCmblumCcDD26z5sMKw7D7iV0S0lGLuVQG6jqIprKe7o12eOrimSAdAm",
+                "https://dl.dropboxusercontent.com/content_link/vHc9Tw2Xb1tzYeDdqC5F8t67rC3vWcOjyltGCzsBeJ51NIUEuD2dpKzJjuqb5Iwg"
+        };
+        productList = new ArrayList<>();
+        for (int i = 0; i < names.length; i++) {
+            Product product = new Product();
+            product.setId(i);
+            product.setName(names[i]);
+            product.setPrice(new Double(40));
+            product.setImageUrl(urls[i]);
+            productList.add(product);
+        }
+        return productList;
+    }
+
     public Category getCategoryById(long id) {
         for (Category category : categoryList) {
             if (category.getId() == id)

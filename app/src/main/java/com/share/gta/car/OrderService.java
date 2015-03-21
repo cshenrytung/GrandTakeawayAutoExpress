@@ -47,11 +47,19 @@ public class OrderService extends MediaBrowserService {
     private static final String ID_CATEGORY = "__CATEGORY__";
     private static final String ID_PRODUCT = "__PRODUCT__";
 
-    private static final String CUSTOM_ACTION_THUMBS_UP = "custom_action1";
+    private static final String CUSTOM_ACTION_SHOPPING_CART = "custom_action_shopping_cart";
+    private static final String CUSTOM_ACTION_CHECKOUT = "custom_action_checkout";
+    private static final String CUSTOM_ACTION_PREVIOUS = "custom_action_previous";
+    private static final String CUSTOM_ACTION_NEXT = "custom_action_next";
 
     private MediaSession mSession;
     private MenuProvider menuProvider;
     private MediaPlayer mMediaPlayer;
+
+    private enum State {
+        STATE_PRODUCT_DISPLAY, STATE_SHOPPING_CART, STATE_CHECKOUT
+    }
+    private State state = State.STATE_PRODUCT_DISPLAY;
 
     /*
      * (non-Javadoc)
@@ -70,23 +78,23 @@ public class OrderService extends MediaBrowserService {
 
         // Use these extras to reserve space for the corresponding actions, even when they are disabled
         // in the playbackstate, so the custom actions don't reflow.
-        Bundle extras = new Bundle();
-        extras.putBoolean(
-                "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_NEXT",
-                true);
-        extras.putBoolean(
-                "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_PREVIOUS",
-                true);
-        // If you want to reserve the Queue slot when there is no queue
-        // (mSession.setQueue(emptylist)), uncomment the lines below:
-        // extras.putBoolean(
-        //   "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_QUEUE",
-        //   true);
-        mSession.setExtras(extras);
-
-        updatePlaybackState("AHA!");
+//        Bundle extras = new Bundle();
+//        extras.putBoolean(
+//                "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_NEXT",
+//                true);
+//        extras.putBoolean(
+//                "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_SKIP_TO_PREVIOUS",
+//                true);
+//        // If you want to reserve the Queue slot when there is no queue
+//        // (mSession.setQueue(emptylist)), uncomment the lines below:
+//        // extras.putBoolean(
+//        //   "com.google.android.gms.car.media.ALWAYS_RESERVE_SPACE_FOR.ACTION_QUEUE",
+//        //   true);
+//        mSession.setExtras(extras);
 
         menuProvider = MenuProvider.getInstance(getBaseContext());
+        Product product = menuProvider.getProducts().get(0);
+        displayProductPage(product);
 
     }
 
@@ -144,14 +152,14 @@ public class OrderService extends MediaBrowserService {
                     new MediaDescription.Builder()
                         .setMediaId(ID_PAYMENT)
                         .setTitle(getString(R.string.menu_payment))
-                        .setIconUri(Uri.parse("android.resource://com.share.gta/drawable/payment_icon"))
+                        .setIconUri(Uri.parse("android.resource://com.share.gta/" + R.drawable.payment_icon))
                         .build(), MediaItem.FLAG_BROWSABLE
             ));
             mediaItems.add(new MediaItem(
                     new MediaDescription.Builder()
                             .setMediaId(ID_HISTORY)
                             .setTitle(getString(R.string.menu_history))
-                            .setIconUri(Uri.parse("android.resource://com.share.gta/drawable/history_icon"))
+                            .setIconUri(Uri.parse("android.resource://com.share.gta/" + R.drawable.history_icon))
                             .build(), MediaItem.FLAG_BROWSABLE
             ));
 
@@ -170,44 +178,13 @@ public class OrderService extends MediaBrowserService {
             long id = Long.valueOf(parentMediaId.substring(ID_CATEGORY.length(), parentMediaId.length()));
             Category category = menuProvider.getCategoryById(id);
             for (Product product : category.getProductList()) {
-                MediaMetadata track = new MediaMetadata.Builder()
-                        .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, "ID")
-                        .putString(MediaMetadata.METADATA_KEY_ALBUM, "ALBUM")
-                        .putString(MediaMetadata.METADATA_KEY_ARTIST, "ARTIST")
-                        .putLong(MediaMetadata.METADATA_KEY_DURATION, 100)
-                        .putString(MediaMetadata.METADATA_KEY_GENRE, "GENRE")
-                        .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, "ALBUM ART")
-                        .putString(MediaMetadata.METADATA_KEY_TITLE, product.getName())
-                        .putLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER, 1)
-                        .putLong(MediaMetadata.METADATA_KEY_NUM_TRACKS, 10)
-                        .build();
+                MediaMetadata track = createMediaMetadata(product.getName(), "$" + product.getPrice(), "");
                 MediaItem item = new MediaItem(track.getDescription(), MediaItem.FLAG_PLAYABLE);
                 mediaItems.add(item);
             }
         }
-//        } else if (parentMediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
-//            String genre = extractBrowseCategoryFromMediaID(parentMediaId)[1];
-//            LogHelper.d(TAG, "OnLoadChildren.SONGS_BY_GENRE  genre=", genre);
-//            for (MediaMetadata track: mMusicProvider.getMusicsByGenre(genre)) {
-//                // Since mediaMetadata fields are immutable, we need to create a copy, so we
-//                // can set a hierarchy-aware mediaID. We will need to know the media hierarchy
-//                // when we get a onPlayFromMusicID call, so we can create the proper queue based
-//                // on where the music was selected from (by artist, by genre, random, etc)
-//                String hierarchyAwareMediaID = MediaIDHelper.createTrackMediaID(
-//                        MEDIA_ID_MUSICS_BY_GENRE, genre, track);
-//                MediaMetadata trackCopy = new MediaMetadata.Builder(track)
-//                        .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, hierarchyAwareMediaID)
-//                        .build();
-//                MediaItem bItem = new MediaItem(
-//                        trackCopy.getDescription(), MediaItem.FLAG_PLAYABLE);
-//                mediaItems.add(bItem);
-//            }
-//        } else {
-//            LogHelper.w(TAG, "Skipping unmatched parentMediaId: ", parentMediaId);
-//        }
-            result.sendResult(mediaItems);
 
-
+        result.sendResult(mediaItems);
     }
 
     private void updatePlaybackState(String error) {
@@ -218,78 +195,67 @@ public class OrderService extends MediaBrowserService {
             stateBuilder.setErrorMessage(error);
             stateBuilder.setState(PlaybackState.STATE_ERROR, 0, 0);
         }
+
         setCustomAction(stateBuilder);
 
         mSession.setPlaybackState(stateBuilder.build());
     }
 
     private long getAvailableActions() {
-        long actions = PlaybackState.ACTION_PLAY | PlaybackState.ACTION_SET_RATING ;
+        long actions = PlaybackState.ACTION_PLAY;
 
         return actions;
     }
 
     private void setCustomAction(PlaybackState.Builder stateBuilder) {
-//        stateBuilder.addCustomAction(CUSTOM_ACTION_THUMBS_UP, getString(R.string.custom_action1),
-//                R.drawable.ic_star_on);
+        stateBuilder.addCustomAction(CUSTOM_ACTION_SHOPPING_CART, "Shopping Cart",
+                R.drawable.icon_cart);
+        stateBuilder.addCustomAction(CUSTOM_ACTION_PREVIOUS, "Previous",
+                R.drawable.icon_back);
+        stateBuilder.addCustomAction(CUSTOM_ACTION_NEXT, "Next",
+                R.drawable.icon_next);
+        stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout",
+                R.drawable.icon_card);
     }
 
-    private void createMediaPlayerIfNeeded() {
-        LogHelper.d(TAG, "createMediaPlayerIfNeeded. needed? " + (mMediaPlayer==null));
-        if (mMediaPlayer == null) {
-            mMediaPlayer = new MediaPlayer();
-
-            // Make sure the media player will acquire a wake-lock while
-            // playing. If we don't do that, the CPU might go to sleep while the
-            // song is playing, causing playback to stop.
-            mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-
-//            // we want the media player to notify us when it's ready preparing,
-//            // and when it's done playing:
-//            mMediaPlayer.setOnPreparedListener(this);
-//            mMediaPlayer.setOnCompletionListener(this);
-//            mMediaPlayer.setOnErrorListener(this);
-        } else {
-            mMediaPlayer.reset();
-        }
+    private void displayPage(String line1, String line2, String backgroundUrl) {
+        if (backgroundUrl == null || "".equals(backgroundUrl))
+            backgroundUrl = Uri.parse("android.resource://com.share.gta/" + R.raw.bg).toString();
+        updateMetadata(line1, line2, backgroundUrl);
     }
 
-    private void playCurrentSong() {
-//        MediaMetadata track = getCurrentPlayingMusic();
-//        if (track == null) {
-//            LogHelper.e(TAG, "playSong:  ignoring request to play next song, because cannot" +
-//                    " find it." +
-//                    " currentIndex=" + mCurrentIndexOnQueue +
-//                    " playQueue.size=" + (mPlayingQueue==null?"null": mPlayingQueue.size()));
-//            return;
-//        }
-            updatePlaybackState(null);
-            updateMetadata();
+    private void displayProductPage(Product product) {
+        state = State.STATE_PRODUCT_DISPLAY;
+        displayPage(product.getName(), product.getDescription(), product.getImageUrl());
     }
 
-    private void updateMetadata() {
-        updatePlaybackState("This is the meta-data");
-        MediaMetadata track = new MediaMetadata.Builder()
-                .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, "ID")
-                //.putString(CUSTOM_METADATA_TRACK_SOURCE, source)
-                .putString(MediaMetadata.METADATA_KEY_ALBUM, "ALBUM")
-                .putString(MediaMetadata.METADATA_KEY_ARTIST, "ARTIST")
-                .putLong(MediaMetadata.METADATA_KEY_DURATION, 100)
-                .putString(MediaMetadata.METADATA_KEY_GENRE, "GENRE")
-                .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, "ALBUM ART")
-                .putString(MediaMetadata.METADATA_KEY_TITLE, "TITLE")
-                .putLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER, 1)
-                .putLong(MediaMetadata.METADATA_KEY_NUM_TRACKS, 10)
-                .build();
+    private void updateMetadata(String line1, String line2, String backgroundUrl) {
+        updatePlaybackState(null);
+        MediaMetadata track = createMediaMetadata(line1, line2, backgroundUrl);
 
         mSession.setMetadata(track);
+    }
+
+    private MediaMetadata createMediaMetadata(String line1, String line2, String backgroundUrl) {
+        return new MediaMetadata.Builder()
+                    .putString(MediaMetadata.METADATA_KEY_MEDIA_ID, "ID")
+//                    .putString(CUSTOM_METADATA_TRACK_SOURCE, source)
+//                    .putString(MediaMetadata.METADATA_KEY_ALBUM, "ALBUM")
+                    .putString(MediaMetadata.METADATA_KEY_ARTIST, line2)
+//                    .putLong(MediaMetadata.METADATA_KEY_DURATION, 100)
+//                    .putString(MediaMetadata.METADATA_KEY_GENRE, "GENRE")
+                    .putString(MediaMetadata.METADATA_KEY_ALBUM_ART_URI, backgroundUrl)
+                    .putString(MediaMetadata.METADATA_KEY_TITLE, line1)
+//                    .putLong(MediaMetadata.METADATA_KEY_TRACK_NUMBER, 1)
+//                    .putLong(MediaMetadata.METADATA_KEY_NUM_TRACKS, 10)
+                    .build();
     }
 
     private final class MediaSessionCallback extends MediaSession.Callback {
         @Override
         public void onPlay() {
             mSession.setQueueTitle("onPlay");
-            playCurrentSong();
+            doMainButton();
         }
 
         @Override
@@ -299,7 +265,8 @@ public class OrderService extends MediaBrowserService {
         @Override
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
             mSession.setQueueTitle("onPlayFromMediaId");
-            playCurrentSong();
+            //get Product information here...
+            displayPage("line1", "line2", "");
         }
 
         @Override
@@ -320,17 +287,13 @@ public class OrderService extends MediaBrowserService {
 
         @Override
         public void onCustomAction(String action, Bundle extras) {
-//            if (CUSTOM_ACTION_THUMBS_UP.equals(action)) {
-//                LogHelper.i(TAG, "onCustomAction: favorite for current track");
-//                MediaMetadata track = getCurrentPlayingMusic();
-//                if (track != null) {
-//                    String mediaId = track.getString(MediaMetadata.METADATA_KEY_MEDIA_ID);
-//                    mMusicProvider.setFavorite(mediaId, !mMusicProvider.isFavorite(mediaId));
-//                }
-//                updatePlaybackState(null);
-//            } else {
+            if (CUSTOM_ACTION_CHECKOUT.equals(action)) {
+                doCheckout();
+            } else if (CUSTOM_ACTION_SHOPPING_CART.equals(action)) {
+                doShoppingCart();
+            } else {
                 LogHelper.e(TAG, "Unsupported action: ", action);
-//            }
+            }
 
         }
 
@@ -338,6 +301,30 @@ public class OrderService extends MediaBrowserService {
         public void onPlayFromSearch(String query, Bundle extras) {
             mSession.setQueueTitle("onPlayFromSearch");
         }
+    }
+
+    private void doMainButton() {
+        if (state == null)
+            state = State.STATE_PRODUCT_DISPLAY;
+
+        switch (state) {
+            case STATE_PRODUCT_DISPLAY:
+                break;
+            case STATE_SHOPPING_CART:
+                break;
+            case STATE_CHECKOUT:
+                break;
+        }
+    }
+
+    private void doShoppingCart() {
+        state = State.STATE_SHOPPING_CART;
+        //show items in queue
+    }
+
+    private void doCheckout() {
+        state = State.STATE_CHECKOUT;
+        displayPage("TOTAL AMOUNT: ", "$100.00", "");
     }
 
 }
