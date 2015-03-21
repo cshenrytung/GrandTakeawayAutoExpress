@@ -114,4 +114,9 @@
     <string name="continue_shopping">Continue Shopping</string>
     <string name="checkout_select">Select</string>
     <string name="shipping_information">Shipping Information</string>
+
+    <string name="menu_payment">Payment</string>
+    <string name="menu_history">History</string>
+    <string name="menu_about">About</string>
+
 </resources>

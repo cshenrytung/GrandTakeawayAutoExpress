@@ -4,7 +4,7 @@ def AAVersion = '3.2'
 
 android {
 
-    compileSdkVersion 20
+    compileSdkVersion 21
     buildToolsVersion "20.0.0"
 
     defaultConfig {
@@ -45,7 +45,6 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.+'
     //compile 'org.apache.commons:commons-lang3:3.0'
     //compile 'com.google.code.gson:gson:2.3'
-
     apt "org.androidannotations:androidannotations:$AAVersion"
     compile "org.androidannotations:androidannotations-api:$AAVersion"
 }
