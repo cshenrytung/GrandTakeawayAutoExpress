@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="41dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_masterpass" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_bank" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/checkout_card_details"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/profile_information"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/checkout_full_name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Full Name"
+            android:textColor="@color/profile_text" />
+
+        <EditText
+            android:id="@+id/checkout_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/checkout_full_name_label"
+            android:gravity="right"
+            android:hint="@string/checkout_hint_full_name"
+            android:singleLine="true"
+            android:textColor="@color/profile_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/checkout_select_cart_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/profile_information"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/checkout_select_cart_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/checkout_hint_card_type"
+            android:textColor="@color/profile_text" />
+
+        <TextView
+            android:id="@+id/checkout_select_cart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5sp"
+            android:layout_toRightOf="@id/checkout_select_cart_label"
+            android:gravity="right"
+            android:singleLine="true"
+            android:textColor="@color/profile_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/profile_information"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/checkout_cart_number_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/checkout_hint_card_number"
+            android:textColor="@color/profile_text" />
+
+        <EditText
+            android:id="@+id/checkout_cart_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/checkout_cart_number_label"
+            android:gravity="right"
+            android:hint="@string/checkout_hint_card_number"
+            android:singleLine="true"
+            android:textColor="@color/profile_text" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/profile_information"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/checkout_exp_date_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="@string/checkout_exp_date"
+            android:textColor="@color/profile_text" />
+
+        <EditText
+            android:id="@+id/checkout_exp_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/checkout_exp_date_label"
+            android:gravity="right"
+            android:hint="@string/checkout_exp_date"
+            android:singleLine="true"
+            android:textColor="@color/profile_text" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/shipping_information" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/profile_information">
+
+        <Spinner
+            android:id="@+id/shipping_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/cart_checkout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_corners_red_hard"
+        android:text="@string/checkout_process_order"
+        android:textColor="@android:color/white" />
+</LinearLayout>

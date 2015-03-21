@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".GadgetShopActivity">
+    <item
+        android:id="@+id/action_cart"
+        android:actionLayout="@layout/item_action_bar"
+        android:showAsAction="withText|ifRoom"
+        android:title="@string/menu_item_cart" />
+</menu>

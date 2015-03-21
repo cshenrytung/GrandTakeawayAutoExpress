@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="please_wait">Please wait</string>
+    <string name="connection_error">Connection error</string>
+
+    <!--DRAWER-->
+    <string name="app_name">Gadget Shop</string>
+    <string name="home">Home</string>
+    <string name="cart">My Cart</string>
+    <string name="profile">My Profile</string>
+
+    <!--ACTIONBAR-->
+    <string name="menu_item_cart">Cart</string>
+
+    <!--PRODUCT-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="product_cd_image">Product image</string>
+    <string name="product_add_btn">+ ADD</string>
+    <string name="home_rb_1">All</string>
+    <string name="home_rb_2">$ 0 - 50</string>
+    <string name="home_rb_3">$ 50 - 100</string>
+    <string name="home_rb_4">$ 100+</string>
+    <string name="empty_products">There are no products.</string>
+    <string name="loading_products">Loading products.</string>
+    <string name="error_products">Error getting products.</string>
+    <string name="adding_product_message">Adding product.</string>
+    <string name="quantity_error">\?</string>
+
+    <!--CART-->
+    <string name="cart_total">Total</string>
+    <string name="cart_btn_checkout">Checkout</string>
+    <string name="item_cart_quantity">Quantity:\u0020</string>
+    <string name="cart_or">-OR-</string>
+    <string name="products">Products</string>
+
+    <!--PROFILE-->
+    <string name="profile_name_hint">Name</string>
+    <string name="profile_email_hint">Email</string>
+    <string name="profile_phone_hint">Phone</string>
+    <string name="profile_learn_more">Learn More</string>
+    <string name="profile_paired">Your account is now paired with your \n MasterPass wallet</string>
+
+    <!--PROFILE DIALOG-->
+    <string name="profile_dialog_title">Connect with MasterPass</string>
+    <string name="profile_dialog_message">Your account is now paired with your MasterPass wallet.
+        The next time you checkout, you will simply need to enter your MasterPass password to process the order.</string>
+    <string name="profile_learn_more_dialog_message">Connect your MasterPass with GadgetShop to check out faster.
+        When you connect your MasterPass to GadgetShop, GadgetShop receives certain information that it may use to personalize your
+        shopping experience and help you make easier purchases.</string>
+
+    <!--CHECKOUT-->
+    <string name="checkout_items">Items</string>
+    <string name="checkout_sub_total">Sub Total</string>
+    <string name="checkout_tax">Tax</string>
+    <string name="checkout_shipping">Shipping</string>
+    <string name="checkout_total">Total</string>
+    <string name="checkout_card_details">Credit Card Details</string>
+    <string name="checkout_hint_full_name">Full Name</string>
+    <string name="checkout_hint_card_type">Select Card Type</string>
+    <string name="checkout_hint_card_number">Card Number</string>
+    <string name="checkout_exp_date">Exp Date</string>
+    <string name="checkout_payment_method">Select Payment Method</string>
+
+    <!--CARD TYPE-->
+    <string name="dialog_card_type">Select Card Type</string>
+    <string name="dialog_card_message">Select a credit card provider from the list of supported providers</string>
+    <string name="dialog_card_mastercard">MasterCard</string>
+    <string name="dialog_card_visa">Visa</string>
+    <string name="dialog_card_discover">Discover</string>
+    <string name="dialog_card_american_express">American Express</string>
+
+    <!--CONNECT-->
+    <string name="menu_item_done">DONE</string>
+    <string name="cancel">Cancel</string>
+    <string name="checkout_process_order">Process Order</string>
+    <string name="card_number">XXXX XXXX XXXX</string>
+    <string name="card_number_default">0000 0000 0000 0000</string>
+    <string name="card_name_default">NAME</string>
+    <string name="card_exp_date_default">00/00</string>
+    <string name="cd_card">Card</string>
+    <string name="cd_login_icon">Gadget Shop icon</string>
+
+    <!-- LOGIN-->
+    <string name="login_hint_username">Username</string>
+    <string name="login_hint_password">Password</string>
+    <string name="login_label">Login</string>
+    <string name="login_register_label">Register Now</string>
+    <string name="login_hint_remember_password">Remember me</string>
+    <string name="login_sign_in">Sign In</string>
+    <string name="login_social_login">SOCIAL LOGIN</string>
+    <string name="login_skip">SKIP AND SHOP</string>
+    <string name="login_facebook">{fa-facebook}  Login with Facebook</string>
+    <string name="login_twitter">{fa-twitter}  Login with Twitter</string>
+    <string name="username_password_empty">The username and password can\'t be empty</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="invalid_username_or_password">Invalid username or password</string>
+
+    <!-- REGISTER-->
+    <string name="title_register_user">Register User</string>
+    <string name="content_register_user">Please enter your username to register a new account. The account password will be automatically set to \'password\'.</string>
+    <string name="ok_register_user">Register</string>
+    <string name="register_empty">The user can\'t be empty</string>
+    <string name="login_hint_register">Username</string>
+
+    <!-- CHECKOUT-->
+    <string name="checkout_success">Success</string>
+    <string name="checkout_success_description">Your purchase has been confirmed and will ship soon.</string>
+    <string name="processing">Processing Your Payment</string>
+    <string name="checkout_confirmation">CONFIRMATION</string>
+    <string name="checkout_confirmation_number">Order Confirmation Number: D64H7829</string>
+    <string name="checkout_purchased">Purchased with</string>
+    <string name="register_error">Username already taken - Please try another</string>
+    <string name="continue_shopping">Continue Shopping</string>
+    <string name="checkout_select">Select</string>
+    <string name="shipping_information">Shipping Information</string>
+</resources>

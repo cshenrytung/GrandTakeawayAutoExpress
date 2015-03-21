@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="menu_divider">#222328</color>
+    <color name="menu_item">#C9CBD6</color>
+    <color name="background">#C9CBD6</color>
+    <color name="orange_light">#F69816</color>
+    <color name="orange_dark">#D84219</color>
+    <color name="rb_background_regular">#32333C</color>
+    <color name="background_color">#272932</color>
+    <color name="cart_price">#E5461C</color>
+    <color name="cart_checkout_button">#D9534E</color>
+    <color name="cart_divider">#23242A</color>
+    <color name="profile_alert">#1F78D5</color>
+    <color name="profile_information">#D5D8E1</color>
+    <color name="profile_text">#81848B</color>
+    <color name="facebook">#3B5998</color>
+    <color name="twitter">#00ACED</color>
+    <color name="register_content">#9C9DA1</color>
+</resources>

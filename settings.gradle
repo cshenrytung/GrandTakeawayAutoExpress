@@ -1,0 +1,3 @@
+include ':app'
+include ':masterpass-android-library'
+project(':masterpass-android-library').projectDir = new File(settingsDir, 'app/MasterPass-Android-Library/masterpass-android-library')

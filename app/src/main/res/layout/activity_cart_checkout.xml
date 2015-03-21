@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/checkout_sub_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="@string/checkout_sub_total"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:id="@+id/cart_checkout_items_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/checkout_sub_total"
+            android:background="@android:color/black"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/cart_checkout_items_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:text="@string/checkout_items"
+                android:textColor="@color/profile_information"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cart_checkout_items"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/cart_checkout_items_label"
+                android:gravity="right"
+                android:textColor="@color/profile_information" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/cart_checkout_tax_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cart_checkout_items_container"
+            android:background="@android:color/black"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/cart_checkout_tax_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:text="@string/checkout_tax"
+                android:textColor="@color/profile_information"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cart_checkout_tax"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/cart_checkout_tax_label"
+                android:gravity="right"
+                android:textColor="@color/profile_information" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cart_checkout_shipping_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cart_checkout_tax_container"
+            android:background="@android:color/black"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/cart_checkout_shipping_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:text="@string/checkout_shipping"
+                android:textColor="@color/profile_information"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cart_checkout_shipping"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/cart_checkout_shipping_label"
+                android:gravity="right"
+                android:textColor="@color/profile_information" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/cart_checkout_total_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cart_checkout_shipping_container"
+            android:background="@color/background_color"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp">
+
+            <TextView
+                android:id="@+id/cart_checkout_total_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checkout_total"
+                android:textColor="@color/profile_information"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cart_checkout_total"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/cart_checkout_total_label"
+                android:gravity="right"
+                android:textColor="@color/profile_information" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/cart_checkout_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cart_checkout_total_container"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/checkout_payment_method"
+            android:textSize="14sp" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/card_header_pager"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_below="@id/cart_checkout_title"
+            android:layout_marginBottom="10sp" />
+
+        <com.share.gta.view.NonSwipeableViewPager
+            android:id="@+id/card_information_pager"
+            android:layout_width="match_parent"
+            android:layout_height="500sp"
+            android:layout_below="@id/card_header_pager" />
+    </RelativeLayout>
+</ScrollView>

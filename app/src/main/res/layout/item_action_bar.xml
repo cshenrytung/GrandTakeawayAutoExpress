@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <IconTextView
+        android:id="@+id/cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="{fa-shopping-cart}"
+        android:textSize="25sp" />
+
+    <TextView
+        android:id="@+id/notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/badge_circle"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="10sp" />
+
+    <ProgressBar
+        android:id="@+id/notification_progress"
+        android:layout_width="18sp"
+        android:layout_height="18sp"
+        android:layout_alignParentRight="true"
+        android:gravity="center" />
+</RelativeLayout>

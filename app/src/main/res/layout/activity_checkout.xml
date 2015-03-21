@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/checkout_title_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background_color"
+        android:orientation="vertical"
+        android:paddingBottom="10sp"
+        android:paddingTop="20sp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/checkout_success"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15sp"
+            android:layout_marginRight="15sp"
+            android:gravity="center"
+            android:text="@string/checkout_success_description"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/checkout_continue"
+        android:layout_width="match_parent"
+        android:layout_height="50sp"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/holo_red_light"
+        android:text="@string/continue_shopping"
+        android:textColor="@android:color/white" />
+
+    <RelativeLayout
+        android:id="@+id/checkout_purchased"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/checkout_continue"
+        android:background="@android:color/white"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/checkout_purchased_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="10sp"
+            android:text="@string/checkout_purchased"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_toRightOf="@id/checkout_purchased_label"
+            android:src="@drawable/ic_masterpass" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/checkout_total_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/checkout_purchased"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:padding="15sp">
+
+        <TextView
+            android:id="@+id/checkout_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10sp"
+            android:text="@string/checkout_total"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/checkout_total_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/checkout_total"
+            android:textColor="@color/cart_price"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/checkout_confirmation_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/checkout_total_container"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:padding="15sp"
+        android:text="@string/checkout_confirmation_number"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/checkout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/checkout_confirmation_number"
+        android:layout_below="@id/checkout_title_container"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="20sp"
+            android:gravity="center"
+            android:text="@string/checkout_confirmation"
+            android:textSize="20sp" />
+
+        <ListView
+            android:id="@+id/checkout_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_color" />
+
+        <com.share.gta.view.EmptyLoadingView
+            android:id="@+id/empty_loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background_color" />
+    </LinearLayout>
+</RelativeLayout>

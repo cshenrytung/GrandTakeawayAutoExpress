@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.share.gta">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name="com.share.gta.GadgetShopApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="com.share.gta.activity.GadgetShopActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.share.gta.activity.CartActivity"
+            android:parentActivityName="com.share.gta.activity.GadgetShopActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.share.gta.activity.CartCheckoutActivity"
+            android:parentActivityName="com.share.gta.activity.GadgetShopActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.share.gta.activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.share.gta.activity.CheckoutActivity"
+            android:parentActivityName="com.share.gta.activity.GadgetShopActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.share.gta.activity.AnimationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.share.gta.activity.RegisterActivity"
+            android:parentActivityName="com.share.gta.activity.LoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.anypresence.masterpass_android_library.activities.MPLightBox"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
+
+</manifest>

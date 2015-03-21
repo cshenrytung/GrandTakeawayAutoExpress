@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RadioGroup
+        android:id="@+id/home_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp">
+
+        <RadioButton
+            android:id="@+id/home_rb_1"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rb_background_left"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/home_rb_1"
+            android:textColor="@drawable/rb_text_color"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/home_rb_2"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rb_background"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/home_rb_2"
+            android:textColor="@drawable/rb_text_color"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/home_rb_3"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rb_background"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/home_rb_3"
+            android:textColor="@drawable/rb_text_color"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/home_rb_4"
+            android:layout_width="85dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rb_background_right"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/home_rb_4"
+            android:textColor="@drawable/rb_text_color"
+            android:textSize="14sp" />
+    </RadioGroup>
+
+    <GridView
+        android:id="@+id/home_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/home_header"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
+
+    <com.share.gta.view.EmptyLoadingView
+        android:id="@+id/empty_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/home_header" />
+</RelativeLayout>
