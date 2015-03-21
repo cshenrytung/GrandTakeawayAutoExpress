@@ -21,6 +21,7 @@ import com.share.gta.fragment.CartFragment;
 import com.share.gta.fragment.HomeFragment;
 import com.share.gta.fragment.NavigationDrawerFragment;
 import com.share.gta.fragment.ProfileFragment;
+import com.share.gta.helper.LocationHelper_;
 
 import java.util.List;
 
@@ -113,7 +114,7 @@ public class GTAExpressActivity extends BaseActivity
     public void requestRestaurantList() {
         BaseActivity activity = (BaseActivity) this;
         activity.showProgress();
-        activity.getMCLibrary().restaurantList(activity);
+        activity.getMCLibrary().restaurantList(activity, LocationHelper_.getInstance_(getContext()).getLat(), LocationHelper_.getInstance_(getContext()).getLon());
     }
 
     public void onSectionAttached(int number) {

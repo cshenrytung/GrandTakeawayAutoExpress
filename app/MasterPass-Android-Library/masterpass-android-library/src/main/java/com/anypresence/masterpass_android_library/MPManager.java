@@ -123,7 +123,7 @@ public class MPManager implements ILightBox {
         this.requestPairing(viewController, futureCallback);
     }
 
-    public void restaurantList(final ViewController viewController) {
+    public void restaurantList(final ViewController viewController, String lon, String lat) {
         FutureCallback<List<StackOverflowXmlParser.Entry>> futureCallback = new FutureCallback<List<StackOverflowXmlParser.Entry>>() {
             @Override
             public void onSuccess(List<StackOverflowXmlParser.Entry> details) {
@@ -145,7 +145,7 @@ public class MPManager implements ILightBox {
                 delegate.pairingDidComplete(false, throwable);
             }
         };
-        this.requestRestaurantsList(viewController, futureCallback);
+        this.requestRestaurantsList(viewController, futureCallback, lon, lat);
     }
 
     protected void requestPairing(ViewController viewController, final FutureCallback<Details> callback) {
@@ -166,7 +166,7 @@ public class MPManager implements ILightBox {
         ConnectionUtil.call(true, getPairURL(), viewController.getXSessionId(), null, listener);
     }
 
-    protected void requestRestaurantsList(ViewController viewController, final FutureCallback<List<StackOverflowXmlParser.Entry>> callback) {
+    protected void requestRestaurantsList(ViewController viewController, final FutureCallback<List<StackOverflowXmlParser.Entry>> callback, String lon, String lat) {
         FutureCallback<String> listener = new FutureCallback<String>() {
             @Override
             public void onSuccess(String response) {
@@ -196,7 +196,8 @@ public class MPManager implements ILightBox {
         rr.Longitude = "-90.286781";
         rr.Latitude = "-90.286781";
 
-        ConnectionUtil.call(getRestaurantLocationURL(), viewController.getXSessionId(), null, listener);
+
+        ConnectionUtil.call(getRestaurantLocationURL(lon, lat), viewController.getXSessionId(), null, listener);
     }
 
     private void showLightBoxWindowOfType(final MPLightBox.MPLightBoxType type, final LightBoxParams options, ViewController viewController) {
@@ -495,7 +496,7 @@ public class MPManager implements ILightBox {
         return expressCheckoutURL;
     }
 
-    public String getRestaurantLocationURL() {
-        return "http://dmartin.org:8021/restaurants/v1/restaurant?PageOffset=0&PageLength=10&Latitude=38.53463&Longitude=-90.286781";
+    public String getRestaurantLocationURL(String lon, String lat) {
+        return "http://dmartin.org:8021/restaurants/v1/restaurant?PageOffset=0&PageLength=10&Latitude="+lat+"&Longitude="+lon;
     }
 }
