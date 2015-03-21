@@ -61,6 +61,8 @@ public class OrderService extends MediaBrowserService {
     }
     private State state = State.STATE_PRODUCT_DISPLAY;
 
+    private int currentProductIndex = 0;
+
     /*
      * (non-Javadoc)
      * @see android.app.Service#onCreate()
@@ -215,12 +217,12 @@ public class OrderService extends MediaBrowserService {
         stateBuilder.addCustomAction(CUSTOM_ACTION_NEXT, "Next",
                 R.drawable.icon_next);
         stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout",
-                R.drawable.icon_card);
+                R.drawable.icon_paynext);
     }
 
     private void displayPage(String line1, String line2, String backgroundUrl) {
         if (backgroundUrl == null || "".equals(backgroundUrl))
-            backgroundUrl = Uri.parse("android.resource://com.share.gta/" + R.raw.bg).toString();
+            backgroundUrl = Uri.parse("android.resource://com.share.gta/" + R.drawable.bg).toString();
         updateMetadata(line1, line2, backgroundUrl);
     }
 
@@ -308,11 +310,19 @@ public class OrderService extends MediaBrowserService {
     }
 
     private void doNext() {
-
+        List<Product> productList = menuProvider.getProducts();
+        currentProductIndex++;
+        if (currentProductIndex >= productList.size())
+            currentProductIndex = productList.size()-1;
+        displayProductPage(productList.get(currentProductIndex));
     }
 
     private void doPrevious() {
-        
+        List<Product> productList = menuProvider.getProducts();
+        currentProductIndex--;
+        if (currentProductIndex < 0)
+            currentProductIndex = 0;
+        displayProductPage(productList.get(currentProductIndex));
     }
 
     private void doMainButton() {

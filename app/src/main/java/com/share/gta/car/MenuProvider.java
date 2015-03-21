@@ -66,9 +66,9 @@ public class MenuProvider {
     public List<Product> getProducts() {
         String[] names = {"Americano", "Cappuccino", "Iced Mocha"};
         String[] urls = {
-                "https://dl.dropboxusercontent.com/content_link/2fhCoYnbINXYJI0vBFtF4sB42xsuxLMLpZc0siv7F8WXK6fskHpRHNh4hcW0Nlr2",
-                "https://dl.dropboxusercontent.com/content_link/ptotY9S1vCmblumCcDD26z5sMKw7D7iV0S0lGLuVQG6jqIprKe7o12eOrimSAdAm",
-                "https://dl.dropboxusercontent.com/content_link/vHc9Tw2Xb1tzYeDdqC5F8t67rC3vWcOjyltGCzsBeJ51NIUEuD2dpKzJjuqb5Iwg"
+                "http://people.sc.fsu.edu/~jburkardt/data/png/blackbuck.png",
+                "http://www.whudat.de/images/graffiti_streetart_album_covers_02.jpg",
+                "http://www.bridalbouquets.sg/uploads/1217720100721085748_cd-cover-23.jpg"
         };
         productList = new ArrayList<>();
         for (int i = 0; i < names.length; i++) {
