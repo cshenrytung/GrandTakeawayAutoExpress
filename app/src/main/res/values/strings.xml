@@ -6,7 +6,7 @@
     <!--DRAWER-->
     <string name="app_name">Gadget Shop</string>
     <string name="home">Home</string>
-    <string name="cart">My Cart</string>
+    <string name="cart">My Food Cart</string>
     <string name="profile">My Profile</string>
 
     <!--ACTIONBAR-->

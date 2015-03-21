@@ -189,7 +189,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void loginSuccessful() {
-        startActivity(new Intent(this, GadgetShopActivity.class));
+        startActivity(new Intent(this, GTAExpressActivity.class));
         LoginActivity.this.finish();
     }
 
