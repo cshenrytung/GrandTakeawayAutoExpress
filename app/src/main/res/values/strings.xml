@@ -4,9 +4,9 @@
     <string name="connection_error">Connection error</string>
 
     <!--DRAWER-->
-    <string name="app_name">Gadget Shop</string>
+    <string name="app_name">GTA Express</string>
     <string name="home">Home</string>
-    <string name="cart">My Cart</string>
+    <string name="cart">My Food Cart</string>
     <string name="profile">My Profile</string>
 
     <!--ACTIONBAR-->

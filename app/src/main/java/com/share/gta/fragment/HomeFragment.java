@@ -22,7 +22,7 @@ import com.anypresence.sdk.gadget_app_sample.models.Product;
 import com.share.gta.R;
 import com.share.gta.activity.AnimationActivity;
 import com.share.gta.activity.BaseActivity;
-import com.share.gta.activity.GadgetShopActivity;
+import com.share.gta.activity.GTAExpressActivity;
 import com.share.gta.adapter.ProductAdapter;
 import com.share.gta.domain.dto.ToCart;
 import com.share.gta.util.MPECommerceManager;
@@ -100,7 +100,7 @@ public class HomeFragment extends Fragment implements ProductAdapter.IProduct {
     public static HomeFragment newInstance(int sectionNumber) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putInt(GadgetShopActivity.ARG_SECTION_NUMBER, sectionNumber);
+        args.putInt(GTAExpressActivity.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
@@ -174,8 +174,8 @@ public class HomeFragment extends Fragment implements ProductAdapter.IProduct {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((GadgetShopActivity) activity).onSectionAttached(
-                getArguments().getInt(GadgetShopActivity.ARG_SECTION_NUMBER));
+        ((GTAExpressActivity) activity).onSectionAttached(
+                getArguments().getInt(GTAExpressActivity.ARG_SECTION_NUMBER));
         mCallback = (Callback) activity;
     }
 

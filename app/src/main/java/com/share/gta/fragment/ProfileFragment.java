@@ -17,7 +17,7 @@ import com.anypresence.sdk.gadget_app_sample.models.User;
 import com.share.gta.GadgetShopApplication;
 import com.share.gta.R;
 import com.share.gta.activity.BaseActivity;
-import com.share.gta.activity.GadgetShopActivity;
+import com.share.gta.activity.GTAExpressActivity;
 import com.share.gta.dialog.GadgetShopDialog;
 
 /**
@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
     public static ProfileFragment newInstance(int sectionNumber) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putInt(GadgetShopActivity.ARG_SECTION_NUMBER, sectionNumber);
+        args.putInt(GTAExpressActivity.ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
@@ -111,8 +111,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((GadgetShopActivity) activity).onSectionAttached(
-                getArguments().getInt(GadgetShopActivity.ARG_SECTION_NUMBER));
+        ((GTAExpressActivity) activity).onSectionAttached(
+                getArguments().getInt(GTAExpressActivity.ARG_SECTION_NUMBER));
     }
 
     @Override
