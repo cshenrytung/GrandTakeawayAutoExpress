@@ -266,7 +266,7 @@ public class OrderService extends MediaBrowserService {
         state = State.STATE_PRODUCT_DISPLAY;
         displayPage(product.getName(), "$" + product.getPrice(), product.getImageUrl());
 
-        initProductList();
+//        initProductList();
     }
 
     private void updateMetadata(String line1, String line2, String backgroundUrl) {
@@ -381,13 +381,13 @@ public class OrderService extends MediaBrowserService {
     }
 
     private void addToShoppingCart() {
-        if (products != null && products.size() >= currentProductIndex && products.get(currentProductIndex) != null) {
-            com.anypresence.sdk.gadget_app_sample.models.Product onlineProduct = products.get(currentProductIndex);
-            if (onlineProduct.getName() != null && onlineProduct.getName().length() > 0) {
-                LogHelper.d(TAG, "product:" + onlineProduct.getName());
+//        if (products != null && products.size() >= currentProductIndex && products.get(currentProductIndex) != null) {
+//            com.anypresence.sdk.gadget_app_sample.models.Product onlineProduct = products.get(currentProductIndex);
+//            if (onlineProduct.getName() != null && onlineProduct.getName().length() > 0) {
+//                LogHelper.d(TAG, "product:" + onlineProduct.getName());
 //                addProduct(onlineProduct);
-            }
-        }
+//            }
+//        }
 
         Product product = menuProvider.getProducts().get(currentProductIndex);
         shoppingCart.add(product);
@@ -403,9 +403,9 @@ public class OrderService extends MediaBrowserService {
 
     private void doCheckout() {
         state = State.STATE_CHECKOUT;
-        double total = calculateTotalAmount();
+//        double total = calculateTotalAmount();
+        double total = getTotalPrice();
         displayPage("$" + total + " TOTAL", shoppingCart.size() + " item(s)", "android.resource://com.share.gta/drawable/buy_with_masterpass2");
-        displayPage("TOTAL AMOUNT: ", "$" + getTotalPrice(), "");
         masterPassClick();
     }
 
@@ -446,13 +446,15 @@ public class OrderService extends MediaBrowserService {
         LogHelper.d(TAG, "doListProducts");
         this.products = products;
         if (products != null && products.size() > 0) {
-            addProduct(products.get(0));
+//            addProduct(products.get(0));
         }
     }
 
     private void addProduct(com.anypresence.sdk.gadget_app_sample.models.Product product) {
-        ToCart toCart = new ToCart(product, 0, 0);
-        ((ProductAdapter.IProduct) this).addProduct(toCart);
+        if (currentProductIndex >= 0) {
+            ToCart toCart = new ToCart(product, currentProductIndex % 2, currentProductIndex / 2);
+            ((ProductAdapter.IProduct) this).addProduct(toCart);
+        }
     }
 
     private void showAllProducts(final List<com.anypresence.sdk.gadget_app_sample.models.Product> products) {
