@@ -26,6 +26,55 @@ public class ConnectionUtil {
     private static final String LOG_TAG = ConnectionUtil.class.getSimpleName();
     private static final Integer TIMEOUT = 10000;
 
+    public static void call(final String url, final String xSessionId, final JSONObject json, final FutureCallback<String> listener) {
+        Thread t = new Thread() {
+            public void run() {
+                Looper.prepare();
+                HttpClient client = new DefaultHttpClient();
+                HttpConnectionParams.setConnectionTimeout(client.getParams(), TIMEOUT);
+                HttpResponse response;
+                try {
+                    HttpUriRequest request = null;
+                    if (false) {
+                        request = new HttpPost(url);
+                        request.setHeader("Accept", "application/json");
+                        request.setHeader("Content-type", "application/json");
+                        if (json != null) {
+                            StringEntity se = new StringEntity(json.toString());
+                            se.setContentType("application/json");
+                            ((HttpPost) request).setEntity(se);
+                        }
+                    } else {
+                        request = new HttpGet(url);
+                    }
+                    request.setHeader("Cookie", "_session_id=" + xSessionId);
+                    response = client.execute(request);
+                    if (response != null) {
+                        StatusLine statusLine = response.getStatusLine();
+                        int statusCode = statusLine.getStatusCode();
+
+                        InputStream in = response.getEntity().getContent();
+                        BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                        StringBuilder responseStrBuilder = new StringBuilder();
+
+                        String inputStr;
+                        while ((inputStr = streamReader.readLine()) != null)
+                            responseStrBuilder.append(inputStr);
+                        if (statusCode == 200) {
+                            listener.onSuccess(responseStrBuilder.toString());
+                        } else {
+                            listener.onFailure(new Throwable(responseStrBuilder.toString()));
+                        }
+                    }
+                } catch (Exception e) {
+                    listener.onFailure(e);
+                }
+                Looper.loop();
+            }
+        };
+        t.start();
+    }
+
     public static void call(final Boolean post, final String url, final String xSessionId, final JSONObject json, final FutureCallback<JSONObject> listener) {
         Thread t = new Thread() {
             public void run() {
