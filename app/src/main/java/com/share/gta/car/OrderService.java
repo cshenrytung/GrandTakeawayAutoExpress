@@ -16,6 +16,7 @@
 
 package com.share.gta.car;
 
+import android.app.Activity;
 import android.media.MediaDescription;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -25,14 +26,24 @@ import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.service.media.MediaBrowserService;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.anypresence.masterpass_android_library.MPManager;
+import com.anypresence.masterpass_android_library.dto.RestaurantRequest;
+import com.anypresence.masterpass_android_library.interfaces.FutureCallback;
+import com.anypresence.masterpass_android_library.util.ConnectionUtil;
+import com.anypresence.masterpass_android_library.xml.StackOverflowXmlParser;
+import com.anypresence.sdk.gadget_app_sample.models.User;
 import com.share.gt.model.Category;
 import com.share.gt.model.Product;
+import com.share.gta.GadgetShopApplication;
 import com.share.gta.R;
+import com.share.gta.helper.LocationHelper_;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class OrderService extends MediaBrowserService {
 
@@ -44,6 +55,7 @@ public class OrderService extends MediaBrowserService {
     private static final String ID_ROOT = "__ROOT__";
     private static final String ID_PAYMENT = "_PAYMENT_";
     private static final String ID_HISTORY = "_HISTORY_";
+    private static final String ID_RESTAURANTS = "_RESTAURANTS_";
     private static final String ID_CATEGORY = "__CATEGORY__";
     private static final String ID_PRODUCT = "__PRODUCT__";
 
@@ -59,6 +71,7 @@ public class OrderService extends MediaBrowserService {
     private MediaPlayer mMediaPlayer;
 
     private List<Product> shoppingCart = new ArrayList<>();
+    private List<StackOverflowXmlParser.Entry> listRestaurants = null;
 
     private enum State {
         STATE_PRODUCT_DISPLAY, STATE_SHOPPING_CART, STATE_CHECKOUT
@@ -101,6 +114,7 @@ public class OrderService extends MediaBrowserService {
         menuProvider = MenuProvider.getInstance(getBaseContext());
         Product product = menuProvider.getProducts().get(0);
         displayProductPage(product);
+        getRestaurantList();
 
     }
 
@@ -168,6 +182,13 @@ public class OrderService extends MediaBrowserService {
                             .setIconUri(Uri.parse("android.resource://com.share.gta/drawable/history_icon"))
                             .build(), MediaItem.FLAG_BROWSABLE
             ));
+            mediaItems.add(new MediaItem(
+                    new MediaDescription.Builder()
+                            .setMediaId(ID_RESTAURANTS)
+                            .setTitle(getString(R.string.menu_restaurants))
+                            //.setIconUri(Uri.parse("android.resource://com.share.gta/drawable/history_icon"))
+                            .build(), MediaItem.FLAG_BROWSABLE
+            ));
 
         } else if (ID_HISTORY.equals(parentMediaId)) {
             LogHelper.d(TAG, "OnLoadChildren.MENU");
@@ -179,6 +200,18 @@ public class OrderService extends MediaBrowserService {
                                 .build(), MediaItem.FLAG_BROWSABLE
                 );
                 mediaItems.add(item);
+            }
+        } else if(ID_RESTAURANTS.equals(parentMediaId)) {
+            if (listRestaurants != null) {
+                for (StackOverflowXmlParser.Entry entry : listRestaurants) {
+                    MediaItem item = new MediaItem(
+                            new MediaDescription.Builder()
+                                    .setMediaId(ID_RESTAURANTS + entry.id)
+                                    .setTitle(entry.name)
+                                    .build(), MediaItem.FLAG_PLAYABLE
+                    );
+                    mediaItems.add(item);
+                }
             }
         } else if (parentMediaId.startsWith(ID_CATEGORY)) {
             long id = Long.valueOf(parentMediaId.substring(ID_CATEGORY.length(), parentMediaId.length()));
@@ -237,7 +270,10 @@ public class OrderService extends MediaBrowserService {
         if (!atEnd) {
             stateBuilder.addCustomAction(CUSTOM_ACTION_NEXT, "Next", R.drawable.icon_next);
         }
-        stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout", R.drawable.icon_paynext);
+
+        if (state != State.STATE_CHECKOUT) {
+            stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout", R.drawable.icon_paynext);
+        }
 
     }
 
@@ -410,4 +446,35 @@ public class OrderService extends MediaBrowserService {
         mSession.setQueueTitle("Shopping Cart");
     }
 
+    private void getRestaurantList() {
+        FutureCallback<String> listener = new FutureCallback<String>() {
+            @Override
+            public void onSuccess(String response) {
+
+                Log.d(TAG, "Approved Pairing Request: " + response);
+
+                StackOverflowXmlParser soxp = new StackOverflowXmlParser();
+                try {
+                    listRestaurants = soxp.parse(response);
+                } catch (Exception e) {
+                    Log.d(TAG, "Approved Pairing Request: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                Log.e("Error Pairing Request: ", error.toString());
+            }
+        };
+
+        String lat = LocationHelper_.getInstance_(getBaseContext()).getLat();
+        String lon = LocationHelper_.getInstance_(getBaseContext()).getLon();
+        String locationApiUrl = "http://dmartin.org:8021/restaurants/v1/restaurant?PageOffset=0&PageLength=10&Latitude="+lat+"&Longitude="+lon;
+        String sessionId = "";
+        User user = GadgetShopApplication.getInstance().getUser();
+        if (user != null) {
+            sessionId = user.getXSessionId();
+        }
+        ConnectionUtil.call(locationApiUrl, sessionId, null, listener);
+    }
 }
