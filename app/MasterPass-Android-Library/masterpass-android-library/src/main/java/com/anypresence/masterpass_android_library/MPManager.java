@@ -8,6 +8,7 @@ import com.anypresence.masterpass_android_library.dto.LightBoxParams;
 import com.anypresence.masterpass_android_library.dto.Order;
 import com.anypresence.masterpass_android_library.dto.PairCheckoutResponse;
 import com.anypresence.masterpass_android_library.dto.PreCheckoutResponse;
+import com.anypresence.masterpass_android_library.dto.RestaurantRequest;
 import com.anypresence.masterpass_android_library.dto.StatusWithError;
 import com.anypresence.masterpass_android_library.dto.Wallet;
 import com.anypresence.masterpass_android_library.dto.WebViewOptions;
@@ -21,6 +22,7 @@ import com.anypresence.masterpass_android_library.interfaces.ILightBox;
 import com.anypresence.masterpass_android_library.interfaces.IManager;
 import com.anypresence.masterpass_android_library.interfaces.ViewController;
 import com.anypresence.masterpass_android_library.util.ConnectionUtil;
+import com.anypresence.masterpass_android_library.xml.StackOverflowXmlParser;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -59,6 +61,7 @@ public class MPManager implements ILightBox {
     private String completePairCheckout;
     private String manualCheckoutURL;
     private String expressCheckoutURL;
+    private String restaurantLocationURL;
 
     //Init
 
@@ -88,6 +91,7 @@ public class MPManager implements ILightBox {
         completePairCheckout = prefixURL + "complete_checkout";
         manualCheckoutURL = prefixURL + "non_masterpass_checkout";
         expressCheckoutURL = prefixURL + "express_checkout";
+        restaurantLocationURL = "http://dmartin.org:8021/restaurants/v1/restaurant";
     }
     //Pairing
 
@@ -119,6 +123,31 @@ public class MPManager implements ILightBox {
         this.requestPairing(viewController, futureCallback);
     }
 
+    public void restaurantList(final ViewController viewController, String lon, String lat) {
+        FutureCallback<List<StackOverflowXmlParser.Entry>> futureCallback = new FutureCallback<List<StackOverflowXmlParser.Entry>>() {
+            @Override
+            public void onSuccess(List<StackOverflowXmlParser.Entry> details) {
+//                LightBoxParams options = new LightBoxParams();
+//                options.setRequestedDataTypes(delegate.getSupportedDataTypes());
+//                options.setDetails(details);
+//                options.setRequestPairing(true);
+//                options.setVersion(MP_VERSION);
+//                options.setType(MPLightBox.MPLightBoxType.MPLightBoxTypeConnect);
+//                options.setRequestExpressCheckout(delegate.isExpressCheckoutEnabled());
+//                showLightBoxWindowOfType(MPLightBox.MPLightBoxType.MPLightBoxTypeConnect, options, viewController);
+                viewController.callStartLocationFragment(null, details);
+
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.e(MPManager.class.getSimpleName(), "Error Requesting Pairing: " + throwable.getLocalizedMessage());
+                delegate.pairingDidComplete(false, throwable);
+            }
+        };
+        this.requestRestaurantsList(viewController, futureCallback, lon, lat);
+    }
+
     protected void requestPairing(ViewController viewController, final FutureCallback<Details> callback) {
         FutureCallback<JSONObject> listener = new FutureCallback<JSONObject>() {
             @Override
@@ -135,6 +164,40 @@ public class MPManager implements ILightBox {
             }
         };
         ConnectionUtil.call(true, getPairURL(), viewController.getXSessionId(), null, listener);
+    }
+
+    protected void requestRestaurantsList(ViewController viewController, final FutureCallback<List<StackOverflowXmlParser.Entry>> callback, String lon, String lat) {
+        FutureCallback<String> listener = new FutureCallback<String>() {
+            @Override
+            public void onSuccess(String response) {
+
+                List<StackOverflowXmlParser.Entry> restaurants = null;
+                Log.d(LOG_TAG, "Approved Pairing Request: " + response);
+
+                StackOverflowXmlParser soxp = new StackOverflowXmlParser();
+                try {
+                    restaurants = soxp.parse(response);
+                } catch (Exception e) {
+                    Log.d(LOG_TAG, "Approved Pairing Request: " + e.getMessage());
+                }
+                callback.onSuccess(restaurants);
+            }
+
+            @Override
+            public void onFailure(Throwable error) {
+                Log.e("Error Pairing Request: ", error.toString());
+                callback.onFailure(error);
+            }
+        };
+
+        RestaurantRequest rr = new RestaurantRequest();
+        rr.PageOffset = "0";
+        rr.PageLength = "10";
+        rr.Longitude = "-90.286781";
+        rr.Latitude = "-90.286781";
+
+
+        ConnectionUtil.call(getRestaurantLocationURL(lon, lat), viewController.getXSessionId(), null, listener);
     }
 
     private void showLightBoxWindowOfType(final MPLightBox.MPLightBoxType type, final LightBoxParams options, ViewController viewController) {
@@ -433,4 +496,7 @@ public class MPManager implements ILightBox {
         return expressCheckoutURL;
     }
 
+    public String getRestaurantLocationURL(String lon, String lat) {
+        return "http://dmartin.org:8021/restaurants/v1/restaurant?PageOffset=0&PageLength=10&Latitude="+lat+"&Longitude="+lon;
+    }
 }
