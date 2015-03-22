@@ -16,6 +16,7 @@
 
 package com.share.gta.car;
 
+import android.content.Intent;
 import android.media.MediaDescription;
 import android.media.MediaMetadata;
 import android.media.MediaPlayer;
@@ -25,11 +26,24 @@ import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.service.media.MediaBrowserService;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.anypresence.masterpass_android_library.dto.CreditCard;
+import com.anypresence.masterpass_android_library.dto.Order;
+import com.anypresence.masterpass_android_library.dto.PairCheckoutResponse;
+import com.anypresence.masterpass_android_library.dto.PreCheckoutResponse;
+import com.anypresence.rails_droid.IAPFutureCallback;
 import com.share.gt.model.Category;
 import com.share.gt.model.Product;
+import com.share.gta.GadgetShopApplication;
+import com.share.gta.MPConstants;
 import com.share.gta.R;
+import com.share.gta.activity.BaseActivity;
+import com.share.gta.activity.CheckoutActivity;
+import com.share.gta.adapter.ProductAdapter;
+import com.share.gta.domain.dto.ToCart;
+import com.share.gta.util.MPECommerceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +73,7 @@ public class OrderService extends MediaBrowserService {
     private MediaPlayer mMediaPlayer;
 
     private List<Product> shoppingCart = new ArrayList<>();
+    private List<com.anypresence.sdk.gadget_app_sample.models.Product> products;
 
     private enum State {
         STATE_PRODUCT_DISPLAY, STATE_SHOPPING_CART, STATE_CHECKOUT
@@ -250,6 +265,8 @@ public class OrderService extends MediaBrowserService {
     private void displayProductPage(Product product) {
         state = State.STATE_PRODUCT_DISPLAY;
         displayPage(product.getName(), "$" + product.getPrice(), product.getImageUrl());
+
+        initProductList();
     }
 
     private void updateMetadata(String line1, String line2, String backgroundUrl) {
@@ -364,6 +381,14 @@ public class OrderService extends MediaBrowserService {
     }
 
     private void addToShoppingCart() {
+        if (products != null && products.size() >= currentProductIndex && products.get(currentProductIndex) != null) {
+            com.anypresence.sdk.gadget_app_sample.models.Product onlineProduct = products.get(currentProductIndex);
+            if (onlineProduct.getName() != null && onlineProduct.getName().length() > 0) {
+                LogHelper.d(TAG, "product:" + onlineProduct.getName());
+//                addProduct(onlineProduct);
+            }
+        }
+
         Product product = menuProvider.getProducts().get(currentProductIndex);
         shoppingCart.add(product);
         updateShoppingCartQueue();
@@ -380,6 +405,8 @@ public class OrderService extends MediaBrowserService {
         state = State.STATE_CHECKOUT;
         double total = calculateTotalAmount();
         displayPage("$" + total + " TOTAL", shoppingCart.size() + " item(s)", "android.resource://com.share.gta/drawable/buy_with_masterpass2");
+        displayPage("TOTAL AMOUNT: ", "$" + getTotalPrice(), "");
+        masterPassClick();
     }
 
     private double calculateTotalAmount() {
@@ -409,5 +436,146 @@ public class OrderService extends MediaBrowserService {
         mSession.setQueue(queueItems);
         mSession.setQueueTitle("Shopping Cart");
     }
+
+    private void initProductList() {
+        LogHelper.d(TAG, "initProductList");
+        MPECommerceManager.getInstance().getAllProducts(allProductsCallback);
+    }
+
+    private void doListProducts(List<com.anypresence.sdk.gadget_app_sample.models.Product> products) {
+        LogHelper.d(TAG, "doListProducts");
+        this.products = products;
+        if (products != null && products.size() > 0) {
+            addProduct(products.get(0));
+        }
+    }
+
+    private void addProduct(com.anypresence.sdk.gadget_app_sample.models.Product product) {
+        ToCart toCart = new ToCart(product, 0, 0);
+        ((ProductAdapter.IProduct) this).addProduct(toCart);
+    }
+
+    private void showAllProducts(final List<com.anypresence.sdk.gadget_app_sample.models.Product> products) {
+        doListProducts(products);
+    }
+
+    private double getTotalPrice() {
+        double totalPrice = GadgetShopApplication.getInstance().getTotal();
+        return totalPrice;
+    }
+
+    private CreditCard getFirstCreditCard() {
+        return getCreditCard(0);
+    }
+
+    private CreditCard getCreditCard(int position) {
+        PairCheckoutResponse pairCheckoutData = null;
+        int MANUAL_CHECKOUT = 1;
+        PreCheckoutResponse preCheckoutData = null;
+        int countOfCards;
+
+        if (preCheckoutData == null) {
+            countOfCards = MANUAL_CHECKOUT;
+        } else
+            countOfCards = preCheckoutData.cards.size() + MANUAL_CHECKOUT;
+        if (countOfCards - 1 != position) {
+            CreditCard creditCard = preCheckoutData.cards.get(position);
+            return creditCard;
+        } else {
+            if (pairCheckoutData != null) {
+                CreditCard creditCard = pairCheckoutData.checkout.card;
+                return creditCard;
+            }
+        }
+        return null;
+    }
+
+    private void masterPassClick() {
+        boolean pairing = BaseServiceLibrary.isAppPaired();
+        if (pairing) {
+//            baseActivity.showProgress();
+            Order order = GadgetShopApplication.getInstance().getOrder();
+            order.card = getFirstCreditCard();
+
+            BaseActivity baseActivity = new BaseActivity() {
+                @Override
+                public void checkoutDidComplete(Boolean success, Throwable error) {
+                    // pay success
+                    LogHelper.d(TAG, success ? "MasterPassCheckoutComplete" : "MasterPassCheckoutCancelled");
+                }
+
+//                @Override
+//                public void pairingDidComplete(Boolean success, Throwable error) {
+//                    // pair success
+//                    Log.d(TAG, success ? "ConnectedMasterPass" : "MasterPassConnectionCancelled");
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            dismissProgress();
+//                        }
+//                    });
+//                    setPairStatus(success);
+//                }
+            };
+
+            if (BaseServiceLibrary.isExpressCheckoutEnabled()){
+                BaseServiceLibrary.getMCLibrary(baseActivity).expressCheckoutForOrder(order, baseActivity);
+            }
+            else {
+                BaseServiceLibrary.getMCLibrary(baseActivity).returnCheckout(order, baseActivity);
+            }
+        }
+    }
+
+    //Callback
+    public IAPFutureCallback<List<com.anypresence.sdk.gadget_app_sample.models.Product>> allProductsCallback = new IAPFutureCallback<List<com.anypresence.sdk.gadget_app_sample.models.Product>>() {
+        @Override
+        public void finished(List<com.anypresence.sdk.gadget_app_sample.models.Product> products, Throwable throwable) {
+            LogHelper.e(TAG, throwable.getMessage());
+            Toast.makeText(getBaseContext(), "Error", Toast.LENGTH_SHORT).show();
+//            emptyLoadingView.setErrorView();
+        }
+
+        @Override
+        public void onSuccess(List<com.anypresence.sdk.gadget_app_sample.models.Product> products) {
+//            emptyLoadingView.setEmptyView();
+            showAllProducts(products);
+        }
+
+        @Override
+        public void onFailure(Throwable throwable) {
+            LogHelper.e(TAG, throwable.toString());
+            Toast.makeText(getBaseContext(), "Error", Toast.LENGTH_SHORT).show();
+//            emptyLoadingView.setErrorView();
+        }
+    };
+//    private IAPFutureCallback<Integer> cartQuantityCallback = new IAPFutureCallback<Integer>() {
+//        @Override
+//        public void finished(Integer integer, Throwable throwable) {
+//            LogHelper.e(TAG, throwable.toString());
+////            showErrorNotification();
+//        }
+//
+//        @Override
+//        public void onSuccess(final Integer size) {
+////            getActivity().runOnUiThread(new Runnable() {
+////                @Override
+////                public void run() {
+////                    if (size != 0) {
+////                        notification.setVisibility(View.VISIBLE);
+////                        notification.setText(String.valueOf(size));
+////                    } else
+////                        notification.setVisibility(View.GONE);
+////                    notificationProgress.setVisibility(View.GONE);
+////                }
+////            });
+//        }
+//
+//        @Override
+//        public void onFailure(Throwable throwable) {
+//            LogHelper.e(TAG, throwable.toString());
+////            showErrorNotification();
+//        }
+//    };
 
 }
