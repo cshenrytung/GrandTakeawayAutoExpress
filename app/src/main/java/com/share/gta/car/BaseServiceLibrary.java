@@ -1,6 +1,7 @@
 package com.share.gta.car;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.anypresence.masterpass_android_library.MPManager;
 import com.anypresence.masterpass_android_library.interfaces.ViewController;
@@ -14,6 +15,7 @@ import com.share.gta.activity.BaseActivity;
 public class BaseServiceLibrary {
 
     public static Boolean isAppPaired() {
+        Log.d("BaseServiceLibrary", "GadgetShopApplication.getInstance:" + GadgetShopApplication.getInstance());
         User user = GadgetShopApplication.getInstance().getUser();
         return user.getIsPaired();
     }
