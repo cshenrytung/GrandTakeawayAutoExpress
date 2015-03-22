@@ -93,7 +93,7 @@ public class GTAExpressActivity extends BaseActivity
         int sectionNumber = position + 1;
         switch (position) {
             case 0:
-                fragment = HomeFragment.newInstance(sectionNumber);
+                fragment = ProfileFragment.newInstance(sectionNumber);
                 break;
             case 1:
                 fragment = CartFragment.newInstance(sectionNumber);
@@ -102,11 +102,11 @@ public class GTAExpressActivity extends BaseActivity
                 fragment = ProfileFragment.newInstance(sectionNumber);
                 break;
             case 3:
-                fragment = HomeFragment.newInstance(sectionNumber);
+                fragment = ProfileFragment.newInstance(sectionNumber);
                 requestRestaurantList();
                 break;
             default:
-                fragment = HomeFragment.newInstance(sectionNumber);
+                fragment = ProfileFragment.newInstance(sectionNumber);
                 break;
         }
         fm.beginTransaction()
