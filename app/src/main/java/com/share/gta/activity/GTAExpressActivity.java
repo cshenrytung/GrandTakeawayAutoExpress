@@ -1,6 +1,7 @@
 package com.share.gta.activity;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.anypresence.masterpass_android_library.dto.PreCheckoutResponse;
+import com.anypresence.masterpass_android_library.xml.StackOverflowXmlParser;
 import com.anypresence.rails_droid.IAPFutureCallback;
 import com.anypresence.sdk.gadget_app_sample.models.OrderDetail;
 import com.share.gta.MPConstants;
@@ -19,6 +21,7 @@ import com.share.gta.dialog.GadgetShopDialog;
 import com.share.gta.domain.dto.ToCart;
 import com.share.gta.fragment.CartFragment;
 import com.share.gta.fragment.HomeFragment;
+import com.share.gta.fragment.LocationFragment;
 import com.share.gta.fragment.NavigationDrawerFragment;
 import com.share.gta.fragment.ProfileFragment;
 import com.share.gta.helper.LocationHelper_;
@@ -115,6 +118,21 @@ public class GTAExpressActivity extends BaseActivity
         BaseActivity activity = (BaseActivity) this;
         activity.showProgress();
         activity.getMCLibrary().restaurantList(activity, LocationHelper_.getInstance_(getContext()).getLat(), LocationHelper_.getInstance_(getContext()).getLon());
+    }
+
+    @Override
+    public void callStartLocationFragment(Activity activity, List<StackOverflowXmlParser.Entry> details) {
+        super.callStartLocationFragment(activity, details);
+
+        Fragment fragment;
+        FragmentManager fm = getFragmentManager();
+        LocationFragment lf = LocationFragment.newInstance(4);
+        lf.setDetail(details);
+        fragment = lf;
+
+        fm.beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
     }
 
     public void onSectionAttached(int number) {

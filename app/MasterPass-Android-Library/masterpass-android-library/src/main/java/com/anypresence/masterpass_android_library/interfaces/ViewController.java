@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.anypresence.masterpass_android_library.dto.WebViewOptions;
+import com.anypresence.masterpass_android_library.xml.StackOverflowXmlParser;
+
+import java.util.List;
 
 /**
  * Created by diego.rotondale on 1/19/2015.
@@ -19,6 +22,8 @@ public interface ViewController {
     void runOnUiThread(Runnable runnable);
 
     void callDone(Activity activity, Boolean animated);
+
+    void callStartLocationFragment(Activity activity, List<StackOverflowXmlParser.Entry> details);
 
     String getXSessionId();
 }

@@ -135,7 +135,7 @@ public class MPManager implements ILightBox {
 //                options.setType(MPLightBox.MPLightBoxType.MPLightBoxTypeConnect);
 //                options.setRequestExpressCheckout(delegate.isExpressCheckoutEnabled());
 //                showLightBoxWindowOfType(MPLightBox.MPLightBoxType.MPLightBoxTypeConnect, options, viewController);
-                  viewController.callDone(null, false);
+                viewController.callStartLocationFragment(null, details);
 
             }
 

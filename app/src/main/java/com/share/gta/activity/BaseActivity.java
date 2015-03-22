@@ -17,6 +17,7 @@ import com.anypresence.masterpass_android_library.dto.WebViewOptions;
 import com.anypresence.masterpass_android_library.interfaces.IManager;
 import com.anypresence.masterpass_android_library.interfaces.OnCompleteCallback;
 import com.anypresence.masterpass_android_library.interfaces.ViewController;
+import com.anypresence.masterpass_android_library.xml.StackOverflowXmlParser;
 import com.anypresence.rails_droid.IAPFutureCallback;
 import com.anypresence.sdk.gadget_app_sample.models.User;
 import com.share.gta.GadgetShopApplication;
@@ -74,9 +75,14 @@ public class BaseActivity extends FragmentActivity implements ViewController, IM
 
     public void callDone(Activity activity, Boolean animated) {
         mConnectionProgressDialog.dismiss();
-        Intent intent = new Intent(this, activity.getClass());
-        Bundle bundle = new Bundle();
-        startActivityForResult(intent, 0);
+//        Intent intent = new Intent(this, activity.getClass());
+//        Bundle bundle = new Bundle();
+//        startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void callStartLocationFragment(Activity activity, List<StackOverflowXmlParser.Entry> details) {
+        callDone(activity, false);
     }
 
     @Override
