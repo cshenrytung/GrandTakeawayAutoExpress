@@ -76,13 +76,24 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/profile_learn_more"
+    android:id="@+id/profile_learn_more"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="10dp"
+    android:text="@string/profile_learn_more"
+    android:textColor="@color/profile_text"
+    android:textSize="15sp"
+    android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/profile_adopt_auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="@string/profile_learn_more"
-        android:textColor="@color/profile_text"
-        android:textSize="15sp"
+        android:text="Ready attaching to Auto"
+        android:textColor="@color/facebook"
+        android:textSize="17sp"
         android:textStyle="bold" />
 </LinearLayout>
