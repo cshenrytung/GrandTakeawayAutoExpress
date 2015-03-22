@@ -192,15 +192,15 @@ public class OrderService extends MediaBrowserService {
 
         } else if (ID_HISTORY.equals(parentMediaId)) {
             LogHelper.d(TAG, "OnLoadChildren.MENU");
-            for (Category category : menuProvider.getMenu()) {
-                MediaItem item = new MediaItem(
-                        new MediaDescription.Builder()
-                                .setMediaId(ID_CATEGORY + category.getId())
-                                .setTitle(category.getName())
-                                .build(), MediaItem.FLAG_BROWSABLE
-                );
-                mediaItems.add(item);
-            }
+//            for (Category category : menuProvider.getMenu()) {
+//                MediaItem item = new MediaItem(
+//                        new MediaDescription.Builder()
+//                                .setMediaId(ID_CATEGORY + category.getId())
+//                                .setTitle(category.getName())
+//                                .build(), MediaItem.FLAG_BROWSABLE
+//                );
+//                mediaItems.add(item);
+//            }
         } else if(ID_RESTAURANTS.equals(parentMediaId)) {
             if (listRestaurants != null) {
                 for (StackOverflowXmlParser.Entry entry : listRestaurants) {
@@ -271,7 +271,7 @@ public class OrderService extends MediaBrowserService {
             stateBuilder.addCustomAction(CUSTOM_ACTION_NEXT, "Next", R.drawable.icon_next);
         }
 
-        if (state != State.STATE_CHECKOUT) {
+        if (state != State.STATE_CHECKOUT && shoppingCart.size() > 0) {
             stateBuilder.addCustomAction(CUSTOM_ACTION_CHECKOUT, "Checkout", R.drawable.icon_paynext);
         }
 
@@ -476,5 +476,10 @@ public class OrderService extends MediaBrowserService {
             sessionId = user.getXSessionId();
         }
         ConnectionUtil.call(locationApiUrl, sessionId, null, listener);
+    }
+
+    private void clearShoppingCart() {
+        shoppingCart.clear();
+        updateShoppingCartQueue();
     }
 }
