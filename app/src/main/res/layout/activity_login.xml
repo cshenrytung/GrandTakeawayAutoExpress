@@ -118,54 +118,5 @@
                 android:textColor="@android:color/white" />
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/login_social"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/login_container"
-            android:layout_marginLeft="40sp"
-            android:text="@string/login_social_login"
-            android:textColor="@android:color/white" />
-
-        <IconTextView
-            android:id="@+id/login_facebook"
-            android:layout_width="match_parent"
-            android:layout_height="40sp"
-            android:layout_below="@id/login_social"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_marginTop="10sp"
-            android:background="@color/facebook"
-            android:gravity="center_vertical"
-            android:paddingLeft="10sp"
-            android:text="@string/login_facebook"
-            android:textColor="@android:color/white" />
-
-        <IconTextView
-            android:id="@+id/login_twitter"
-            android:layout_width="match_parent"
-            android:layout_height="40sp"
-            android:layout_below="@id/login_facebook"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_marginTop="10sp"
-            android:background="@color/twitter"
-            android:gravity="center_vertical"
-            android:paddingLeft="10sp"
-            android:text="@string/login_twitter"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/login_skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/login_twitter"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10sp"
-            android:text="@string/login_skip"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
     </RelativeLayout>
 </ScrollView>
